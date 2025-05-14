@@ -1,0 +1,4 @@
+north direction signal: 40 seconds
+south direction signal: 70 seconds
+east direction signal: 50 seconds
+west direction signal: 30 seconds
