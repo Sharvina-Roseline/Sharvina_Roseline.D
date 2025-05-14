@@ -1,0 +1,52 @@
+import random
+import matplotlib.pyplot as plt
+
+# Configuration
+num_intersections = 4         # Number of traffic intersections
+num_cars = 100                # Total cars (not directly used but can be tracked)
+max_time = 50                 # Duration of the simulation
+
+# Initialize traffic lights and queues at intersections
+traffic_lights = [random.choice(['green', 'red']) for _ in range(num_intersections)]
+queues = [random.randint(5, 25) for _ in range(num_intersections)]
+
+# Optimization: Give green light to the most congested intersection
+def optimize_traffic_lights(queues):
+    max_queue_index = queues.index(max(queues))
+    optimized_lights = ['red'] * len(queues)
+    optimized_lights[max_queue_index] = 'green'
+    return optimized_lights
+
+# Simulation history
+history = []
+
+# Simulate traffic flow over time
+for t in range(max_time):
+    traffic_lights = optimize_traffic_lights(queues)
+
+    for i in range(num_intersections):
+        if traffic_lights[i] == 'green':
+            # Cars pass through green light
+            cars_passed = min(queues[i], random.randint(3, 8))
+            queues[i] -= cars_passed
+            # New cars arrive
+            queues[i] += random.randint(0, 3)
+        else:
+            # Cars arrive and wait at red lights
+            queues[i] += random.randint(1, 4)
+
+    # Record current state
+    history.append(list(queues))
+
+# Plot the results
+time_series = list(range(max_time))
+for i in range(num_intersections):
+    plt.plot(time_series, [h[i] for h in history], label=f'Intersection {i+1}')
+
+plt.xlabel('Time')
+plt.ylabel('Number of Cars in Queue')
+plt.title('Traffic Flow Optimization Over Time')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
