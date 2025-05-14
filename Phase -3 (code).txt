@@ -1,0 +1,48 @@
+import numpy as np
+import pandas as pd
+
+# Simulation parameters
+np.random.seed(0)
+simulation_time = 60        # in seconds
+arrival_rate = 0.3          # average vehicles per second
+green_time = 10             # seconds green per direction
+cycle_time = 4 * green_time # total cycle (4 directions)
+
+# Create DataFrame to hold vehicle info
+columns = ['vehicle_id', 'arrival_time', 'direction', 'wait_time']
+traffic_data = pd.DataFrame(columns=columns)
+
+# Directions: North, East, South, West
+directions = ['N', 'E', 'S', 'W']
+vehicle_id = 0
+wait_list = []
+
+# Simulate vehicle arrivals
+for t in range(simulation_time):
+    for direction in directions:
+        if np.random.rand() < arrival_rate:
+            traffic_data.loc[len(traffic_data)] = [vehicle_id, t, direction, 0]
+            wait_list.append((vehicle_id, direction, t))
+            vehicle_id += 1
+
+# Optimize traffic flow
+for t in range(simulation_time):
+    current_phase = (t // green_time) % 4
+    current_green = directions[current_phase]
+
+    for i, (v_id, dir, arrival_time) in enumerate(wait_list.copy()):
+        if dir == current_green:
+            wait_time = t - arrival_time
+            traffic_data.loc[traffic_data.vehicle_id == v_id, 'wait_time'] = wait_time
+            wait_list.remove((v_id, dir, arrival_time))
+
+# Final results
+avg_wait = traffic_data['wait_time'].mean()
+total_vehicles = len(traffic_data)
+
+print(f"Total vehicles processed: {total_vehicles}")
+print(f"Average wait time: {avg_wait:.2f} seconds")
+
+# Optional: Show results
+print("\nSample Traffic Data:")
+print(traffic_data.head())
