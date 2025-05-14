@@ -1,0 +1,11 @@
+def calculate_optimal_signal_time(vehicle_count, max_cycle_time=120):
+    base_time = 20
+    additional_time = min(vehicle_count * 2, max_cycle_time - base_time)
+    return base_time + additional_time
+
+# Example usage
+intersection_data = {"north": 10, "south": 25, "east": 15, "west": 5}
+
+for direction, count in intersection_data.items():
+    signal_time = calculate_optimal_signal_time(count)
+    print(f"{direction} direction signal: {signal_time} seconds")
