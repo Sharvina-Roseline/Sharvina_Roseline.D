@@ -1,0 +1,10 @@
+Total vehicles processed: 75
+Average wait time: -14.56 seconds
+
+Sample Traffic Data:
+   vehicle_id  arrival_time direction  wait_time
+0           0             0         S         17
+1           1             1         W         27
+2           2             2         N         -4
+3           3             2         N         -6
+4           4             4         S         14
